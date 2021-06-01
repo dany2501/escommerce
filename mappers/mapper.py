@@ -1,0 +1,15 @@
+from dto.Client import Client
+from dto.Product import Product
+from dto.Cart import Cart
+
+class Mapper():
+
+    def mapToClient(self,name,email,token):
+        return Client(name,email,token)
+
+    def mapToProduct(self,product,image):
+        if product is not None:
+            return Product(product.getId(),product.getName(),product.getDescription(),str(product.getPrice()),product.getSku(),product.getStock(),product.getCategoryId(),image)
+
+    def mapToCart(self,product,qty,image):
+        return Cart(self.mapToProduct(product,image),qty)

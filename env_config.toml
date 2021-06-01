@@ -1,0 +1,27 @@
+[default]
+protocol = "http://"
+host = "localhost:5001"
+dynaconf_merge = true
+SERVER_NAME = "localhost:5001"
+DEBUG = false
+SQLALCHEMY_DATABASE_URI = "mysql+pymysql://toor:bl4ckSh4d0w@localhost/eros_system"
+SQLALCHEMY_TRACK_MODIFICATIONS = false
+SQLALCHEMY_ECHO = true
+MAIL_SERVER = 'smtp.gmail.com'
+MAIL_PORT = 465
+MAIL_USE_TLS = false
+MAIL_USE_SSL = true
+MAIL_USERNAME= "replace_email_here"
+MAIL_PASSWORD = "replace_password_here"
+JWT_SECRET_KEY = "replace_secret_key"
+JWT_IDENTITY_CLAIM = "secret_identity"
+REFRESH_EXP_LENGTH = 30
+ACCESS_EXP_LENGTH = 10
+JWT_ACCESS_TOKEN_EXPIRES = 60
+JWT_REFRESH_TOKEN_EXPIRES = 1000
+SECRET_ENCRYPT = "tkKgTgwFRy"
+ESCOMMERCE_POOL_CONNECT=[{
+        context="escommerce_db",
+        database_uri="mysql+pymysql://root:hecd010225@127.0.0.1/escommerce"
+    }
+    ]
