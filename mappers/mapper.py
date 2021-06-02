@@ -1,6 +1,7 @@
 from dto.Client import Client
 from dto.Product import Product
 from dto.Cart import Cart
+from dto.Address import Address
 
 class Mapper():
 
@@ -13,3 +14,7 @@ class Mapper():
 
     def mapToCart(self,product,qty,image):
         return Cart(self.mapToProduct(product,image),qty)
+
+    def mapToAddress(self,address):
+        name = address.getName().split(" ")
+        return Address(name.pop(0),name,address.getStreet(),address.getExtNumber(),address.getCity(),address.getSuburb(),address.getZipCode(),address.getPhone())

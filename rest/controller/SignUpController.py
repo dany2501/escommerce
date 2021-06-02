@@ -43,6 +43,8 @@ class SignUpController(Controller):
                 return response
                 
             else:
-                print("Email doesn't allowed")
+                bodyRS = SignUpRS(False)
+                headerRS = HeaderRS()
+                return Response(headerRS,bodyRS)
         else:
             print("Data not provided")

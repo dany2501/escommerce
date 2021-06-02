@@ -269,6 +269,130 @@ class ProductImage(Base):
     def setProductId(self,productId):
         self.product_id=productId
 
+class Address(Base):
+    __tablename__ = "esc_address"
+    id = Column(Integer,primary_key=True,autoincrement=True)
+    street = Column(String(50),nullable=False)
+    name = Column(String(200),nullable=False)
+    ext_number = Column(String(10),nullable=False)
+    zip_code = Column(Integer,nullable=False)
+    suburb = Column(String(100),nullable=False)
+    city = Column(String(100),nullable=False)
+    phone = Column(String(12),nullable=False)
+    client_id = Column(Integer,ForeignKey('esc_client.id'),nullable=False)
+
+    def getId(self):
+        return self.id
+    
+    def setId(self,id):
+        self.id = id
+
+    def getStreet(self):
+        return self.street
+    
+    def setStreet(self,street):
+        self.street=street
+    
+    def getName(self):
+        return self.name
+    
+    def setName(self,name):
+        self.name=name
+    
+    def getExtNumber(self):
+        return self.ext_number
+    
+    def setExtNumber(self,extNumber):
+        self.ext_number = extNumber
+
+    def getZipCode(self):
+        return self.zip_code
+
+    def setZipCode(self,zipCode):
+        self.zip_code=zipCode
+
+    def getSuburb(self):
+        return self.suburb
+
+    def setSuburb(self,suburb):
+        self.suburb=suburb
+
+    def getCity(self):
+        return self.city
+
+    def setCity(self,city):
+        self.city=city
+    
+    def getPhone(self):
+        return self.phone
+
+    def setPhone(self,phone):
+        self.phone=phone
+    
+    def getClientId(self):
+        return self.client_id
+
+    def setClientId(self,clientId):
+        self.client_id=clientId
+    
+
+class PaymentMethod(Base):
+    __tablename__ = "esc_payment_method"
+    id = Column(Integer,primary_key=True,autoincrement=True)
+    cardholder = Column(String(200),nullable=False)
+    token = Column(String(200),nullable=False)
+    month_expiration = Column(Integer,nullable=False)
+    year_expiration = Column(Integer,nullable=False)
+    client_id = Column(Integer,ForeignKey('esc_client.id'),nullable=False)
+
+    def getId(self):
+        return self.id
+    
+    def setId(self,id):
+        self.id = id
+
+    def getCardholder(self):
+        return self.cardholder
+    
+    def setCardholder(self,cardholder):
+        self.cardholder=cardholder
+    
+    def getToken(self):
+        return self.token
+    
+    def setToken(self,token):
+        self.token=token
+    
+    def getMonthExpiration(self):
+        return self.month_expiration
+    
+    def setMonthExpiration(self,monthExpiration):
+        self.month_expiration = monthExpiration
+    
+    def getYearExpiration(self):
+        return self.year_expiration
+    
+    def setYearExpiration(self,yearExpiration):
+        self.year_expiration = yearExpiration
+
+    def getClientId(self):
+        return self.client_id
+
+    def setClientId(self,clientId):
+        self.client_id=client_id
+
+class Order(Base):
+    __tablename__ = "esc_order"
+    id = Column(Integer,primary_key=True,autoincrement=True)
+    cart_id = Column(Integer,ForeignKey('esc_cart.id'),nullable=False)
+    status_id = Column(Integer,ForeignKey('esc_status_order.id'),nullable=False)
+    address_id = Column(Integer,ForeignKey('esc_address.id'),nullable=False)
+    payment_id = Column(Integer,ForeignKey('esc_client.id'),nullable=False)
+    delivery_id = Column(Integer,ForeignKey('esc_client.id'),nullable=False)
+    created_at = Column(DateTime,nullable=False)
+
+
+
 
 class PersonModel(AbstractModel):
 

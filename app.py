@@ -66,10 +66,13 @@ from rest.resource.Login import LoginResource
 from rest.resource.SignUp import SignUpResource
 from rest.resource.Products import ProductsResource
 from rest.resource.Cart import CartResource
+from rest.resource.Address import AddressResource
+
 api.add_resource(SignUpResource,'/sign-up')
 api.add_resource(LoginResource,'/login')
 api.add_resource(ProductsResource,'/products')
 api.add_resource(CartResource,'/cart')
+api.add_resource(AddressResource,'/address')
 
 @app.route("/")
 def hello():

@@ -26,7 +26,7 @@ class LoginController(Controller):
             bodyRS = LoginRS(True)
             headerRS = HeaderRS()
             client = ClientModel(url).loginClient(email,password)
-            if client is not None:
+            if client is not None and client is not False:
                 token = str(uuid4())
                 session = ClientModel(url).updateClient(client[0].id,token,datetime.now())
                 if session:

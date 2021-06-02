@@ -1,4 +1,3 @@
-from re import I
 from flask import Flask
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Integer,Column,String,DateTime,Boolean,ForeignKey,Float,Text,Time,DECIMAL
