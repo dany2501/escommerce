@@ -5,18 +5,20 @@ from rest.controller.Response import ResponseFactory
 class CartResource(Resource):
 
     def get(self):
-        headers = request.headers['token']
-        if headers:
-            return ResponseFactory.toResponse(CartController().getProducts(headers))
+        token = request.headers['token']
+        if token:
+            return ResponseFactory.toResponse(CartController().getProducts(token))
         #else:
            # print("Token not provided")
         #print(params)"
 
     def post(self):
-        print("Request")
-        headers = request.headers['token']
+        token = request.headers['token']
         params = request.form
         productId = params['productId']
         qty = params['qty']
-        print(qty)
-        return ResponseFactory.toResponse(CartController().addProduct(headers,productId,qty))
+        return ResponseFactory.toResponse(CartController().addProduct(token,productId,qty))
+
+    def delete(self):
+        token = request.headers['token']
+        return ResponseFactory.toResponse(CartController().deleteProducts(token))

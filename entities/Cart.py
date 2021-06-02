@@ -48,3 +48,10 @@ class CartModel(AbstractModel):
             return cart
         else:
             return None
+
+    def deleteProducts(self,cartId):
+        cart = self.session.query(CartProduct).filter(CartProduct.cart_id==cartId).all()
+        if cart is not None:
+            for product in cart:
+                self.delete(product)
+            return True

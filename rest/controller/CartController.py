@@ -17,6 +17,7 @@ from cerberus.responses.Response import Response
 from rest.Responses.CartRS import CartRS
 from mappers.mapper import Mapper
 from uuid import uuid4
+from cerberus.dtos.Error import Error
 class CartController(Controller):
     def __init__(self):
         super(CartController,self).__init__()
@@ -60,6 +61,31 @@ class CartController(Controller):
                         cartResponse.append(Mapper().mapToCart(ProductModel(url).getProductById(p.getProductId()),p.getQty(),image.getUrl()))
                     bodyRS.setProducts(cartResponse)
                     return Response(headerRS,bodyRS)
+
+    def deleteProducts(self,token):
+        headerRS = HeaderRS()
+        if token is not None:
+            bodyRS = CartRS(True)
+            url = self.getUrl()
+            client = ClientModel(url).getDataClient(token)
+            if client is not None:
+                cart = CartModel(url).getCartByClientId(client[0].getId())
+                if cart is not None:
+                    delete = CartModel(url).deleteProducts(cart.getId())
+                    if delete:
+                        print("Deleted")
+                        return Response(headerRS,bodyRS)
+                else:
+                    bodyRS = CartRS(False,Error(6002,"No cuentas con productos"))
+                    return Response(headerRS,bodyRS)
+            else:
+                bodyRS = CartRS(False,Error(6001,"Cliente no encontrado"))
+                return Response(headerRS,bodyRS)
+        else:
+            bodyRS = CartRS(False,Error(6003,"No se encontró al cliente"))
+            return Response(headerRS,bodyRS)
+
+                
 
                     
 

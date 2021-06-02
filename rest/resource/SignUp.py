@@ -9,8 +9,6 @@ class SignUpResource(Resource):
         password = params['password']
         confirmPass = params['confirmPass']
         name = params['name']
-        if email and password==confirmPass and name:
-            return ResponseFactory.toResponse(SignUpController().registerUser(email,password,name))
-        else:
-            print("Error password doesn't match")
+        if email and password and confirmPass and name:
+            return ResponseFactory.toResponse(SignUpController().registerUser(email,password,confirmPass,name))
         #print(params)"

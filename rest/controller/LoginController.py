@@ -13,6 +13,7 @@ from cerberus.responses.HeaderRS import HeaderRS
 from cerberus.responses.Response import Response
 from rest.Responses.LoginRS import LoginRS
 from mappers.mapper import Mapper
+from cerberus.dtos.Error import Error
 from uuid import uuid4
 class LoginController(Controller):
     def __init__(self):
@@ -33,6 +34,11 @@ class LoginController(Controller):
                     c = Mapper().mapToClient(client[2].getName()+" "+client[2].getLastName(),client[1].getEmail(),token)
                     bodyRS.setClient(c)
                     return Response(headerRS,bodyRS)
+            else:
+                bodyRS = LoginRS(False,Error(5001,"Usuario no encontrado"))
+                return Response(headerRS,bodyRS)
+                
+
         else:
             print("Data not provided")
 

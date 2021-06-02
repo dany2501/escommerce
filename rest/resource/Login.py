@@ -9,8 +9,6 @@ class LoginResource(Resource):
         password = params['password']
         if email and password:
             return ResponseFactory.toResponse(LoginController().loginUser(email,password))
-        else:
-            print("Error password doesn't match")
 
     def get(self):
         headers = request.headers['token']

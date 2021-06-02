@@ -13,3 +13,7 @@ class AbstractModel(ABC):
     def insert(self,obj):
         self.session.add(obj)
         self.session.commit()
+
+    def delete(self,obj):
+        self.session.delete(obj)
+        self.session.commit()
