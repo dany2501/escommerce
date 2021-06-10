@@ -1,28 +1,22 @@
 from entities.Product import ProductModel
 from entities.Cart import CartModel
-import json
-
-from flask.json import jsonify
-from requests.api import head
-from sqlalchemy.sql.elements import True_
 from rest.controller.Controller import Controller
-import jwt
 from datetime import date, datetime
-from entities.Client import ClientModel,Client
-from entities.Person import Cart, Person,PersonModel, ProductImage
+from entities.Client import ClientModel
 from entities.Product import ProductModel
 from entities.Cart import CartModel
 from cerberus.responses.HeaderRS import HeaderRS
 from cerberus.responses.Response import Response
 from rest.Responses.CartRS import CartRS
 from mappers.mapper import Mapper
-from uuid import uuid4
 from cerberus.dtos.Error import Error
+
+
 class CartController(Controller):
     def __init__(self):
-        super(CartController,self).__init__()
+        super(CartController, self).__init__()
 
-    def addProduct(self,token,productId,qty):
+    def addProduct(self, token, productId, qty):
         if token is not None and productId is not None:
             bodyRS = CartRS(True)
             headerRS = HeaderRS()
@@ -31,21 +25,37 @@ class CartController(Controller):
             if client is not None:
                 cart = CartModel(url).getCartByClientId(client[0].getId())
                 if cart is None:
-                    cart = CartModel(url).createCart(client[0].getId(),1,datetime.now())
-                    cart = CartModel(url).getCartByClientId(client[0].getId())
+                    cart = CartModel(url).createCart(client[0].getId(), 1, datetime.now())
                 product = ProductModel(url).getProductById(productId)
                 if product is not None:
-                    CartModel(url).addProductToCart(cart.getId(),product.getId(),qty)
-                    products = CartModel(url).getProductsCart(cart.getId())
-                    if products is not None:
-                        cartResponse =[]
-                        for p in products:
-                            image = ProductModel(url).getImageByProductId(p.getProductId())
-                            cartResponse.append(Mapper().mapToCart(ProductModel(url).getProductById(p.getProductId()),p.getQty(),image.getUrl()))
-                        bodyRS.setProducts(cartResponse)
-                        return Response(headerRS,bodyRS)
+                    if product.getStock() >= int(qty):
+                        CartModel(url).addProductToCart(cart.getId(), product.getId(), qty)
+                        products = CartModel(url).getProductsCart(cart.getId())
+                        if products is not None:
+                            cartResponse = []
+                            for p in products:
+                                image = ProductModel(url).getImageByProductId(p.getProductId())
+                                cartResponse.append(Mapper().mapToCart(ProductModel(url).getProductById(p.getProductId()),p.getQty(),image.getUrl()))
+                            bodyRS.setProducts(cartResponse)
+                            return Response(headerRS, bodyRS)
+                        else:
+                            bodyRS = CartRS(False, Error(8004, "Stock insuficiente"))
+                            headerRS = HeaderRS()
+                            return Response(headerRS, bodyRS)
+                    else:
+                        bodyRS = CartRS(False, Error(8003, "Stock insuficiente"))
+                        headerRS = HeaderRS()
+                        return Response(headerRS, bodyRS)
+            else:
+                bodyRS = CartRS(False, Error(8002, "Usuario no encontrado"))
+                headerRS = HeaderRS()
+                return Response(headerRS, bodyRS)
+        else:
+            bodyRS = CartRS(False, Error(8001, "Datos inválidos"))
+            headerRS = HeaderRS()
+            return Response(headerRS, bodyRS)
 
-    def getProducts(self,token):
+    def getProducts(self, token):
         if token is not None:
             bodyRS = CartRS(True)
             headerRS = HeaderRS()
@@ -53,16 +63,35 @@ class CartController(Controller):
             client = ClientModel(url).getDataClient(token)
             if client is not None:
                 cart = CartModel(url).getCartByClientId(client[0].getId())
-                products = CartModel(url).getProductsCart(cart.getId())
-                if products is not None:
-                    cartResponse =[]
-                    for p in products:
-                        image = ProductModel(url).getImageByProductId(p.getProductId())
-                        cartResponse.append(Mapper().mapToCart(ProductModel(url).getProductById(p.getProductId()),p.getQty(),image.getUrl()))
-                    bodyRS.setProducts(cartResponse)
-                    return Response(headerRS,bodyRS)
+                if cart is not None:
+                    products = CartModel(url).getProductsCart(cart.getId())
+                    if products is not None:
+                        cartResponse = []
+                        for p in products:
+                            image = ProductModel(url).getImageByProductId(p.getProductId())
+                            cartResponse.append(
+                                Mapper().mapToCart(
+                                    ProductModel(url).getProductById(p.getProductId()),
+                                    p.getQty(),
+                                    image.getUrl(),
+                                )
+                            )
+                        bodyRS.setProducts(cartResponse)
+                        return Response(headerRS, bodyRS)
+                else:
+                    bodyRS = CartRS(False, Error(7001, "Producto no encontrado"))
+                    headerRS = HeaderRS()
+                    return Response(headerRS, bodyRS)
+            else:
+                bodyRS = CartRS(False, Error(7002, "Usuario no encontrado"))
+                headerRS = HeaderRS()
+                return Response(headerRS, bodyRS)
+        else:
+            bodyRS = CartRS(False, Error(7001, "No hay sesión"))
+            headerRS = HeaderRS()
+            return Response(headerRS, bodyRS)
 
-    def deleteProducts(self,token):
+    def deleteProducts(self, token):
         headerRS = HeaderRS()
         if token is not None:
             bodyRS = CartRS(True)
@@ -74,22 +103,45 @@ class CartController(Controller):
                     delete = CartModel(url).deleteProducts(cart.getId())
                     if delete:
                         print("Deleted")
+                        return Response(headerRS, bodyRS)
+                else:
+                    bodyRS = CartRS(False, Error(6002, "No cuentas con productos"))
+                    return Response(headerRS, bodyRS)
+            else:
+                bodyRS = CartRS(False, Error(6001, "Cliente no encontrado"))
+                return Response(headerRS, bodyRS)
+        else:
+            bodyRS = CartRS(False, Error(6003, "No se encontró al cliente"))
+            return Response(headerRS, bodyRS)
+
+    def deleteProduct(self,token,productId):
+        headerRS = HeaderRS()
+        if token is not None:
+            if productId is not None:
+                bodyRS = CartRS(True)
+                url = self.getUrl()
+                client = ClientModel(url).getDataClient(token)
+                if client is not None:
+                    cart = CartModel(url).getCartByClientId(client[0].getId())
+                    if cart is not None:
+                        success = CartModel(url).deleteProductById(cart.getId(),productId)
+                        if success:
+                            return Response(headerRS,bodyRS)
+                        else:
+                            bodyRS = CartRS(False,Error(9000,"No se pudo eliminar el producto"))
+                            return Response(headerRS,bodyRS)
+                    else:
+                        bodyRS = CartRS(False,Error(9000,"No se pudo eliminar el producto"))
                         return Response(headerRS,bodyRS)
                 else:
-                    bodyRS = CartRS(False,Error(6002,"No cuentas con productos"))
+                    bodyRS = CartRS(False,Error(9001,"Cliente no encontrado"))
                     return Response(headerRS,bodyRS)
             else:
-                bodyRS = CartRS(False,Error(6001,"Cliente no encontrado"))
+                bodyRS = CartRS(False,Error(9002,"Producto no encontrado"))
                 return Response(headerRS,bodyRS)
         else:
-            bodyRS = CartRS(False,Error(6003,"No se encontró al cliente"))
+            bodyRS = CartRS(False,Error(9003,"Token inválido"))
             return Response(headerRS,bodyRS)
-
-                
-
-                    
-
-
 
 
 

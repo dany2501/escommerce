@@ -7,7 +7,8 @@ class ProductsResource(Resource):
     def get(self):
         #headers = request.headers['token']
         #if headers:
-        return ResponseFactory.toResponse(ProductController().getProducts())
+        categoryId = request.headers['categoryId']
+        return ResponseFactory.toResponse(ProductController().getProducts(categoryId=categoryId))
         #else:
            # print("Token not provided")
         #print(params)"

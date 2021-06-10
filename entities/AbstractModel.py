@@ -6,6 +6,7 @@ class AbstractModel(ABC):
     def __init__(self,url):
         self.engine = create_engine(url)
         self.session = Session(self.engine)
+        self.session.expire_on_commit=False
 
     def update(self):
         self.session.commit()

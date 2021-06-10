@@ -1,7 +1,3 @@
-from re import I
-from flask import Flask
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Integer,Column,String,DateTime,Boolean,ForeignKey,Float,Text,Time,DECIMAL
 from entities.Person import Person
 import hashlib
 from entities.AbstractModel import AbstractModel
@@ -14,12 +10,15 @@ class UserModel(AbstractModel):
         super(UserModel,self).__init__(url)
         self.url=url
 
-    def createUser(self,email,password,person_id):
+    def createUser(self,email,password,person_id,code):
         user = User()
         user.setEmail(email)
         user.setPassword(self.encryptPassword(password))
         user.setPersonId(person_id)
+        user.setCode(code)
+        user.setStatusId(2)
         self.insert(user)
+        return user
 
     def updateUser(self,userId,email,password):
         self.session.query(User).filter(User.id==userId).update({"email":email,"password":password})
@@ -49,3 +48,15 @@ class UserModel(AbstractModel):
             return user
         else:
             print("Throw Exceptio")
+
+    def getUserByEmail(self,email):
+        user = self.session.query(User).filter(User.email==email).first()
+        if user is not None:
+            return user
+        else:
+            return None
+
+    def updateUserStatus(self,userId,statusId):
+        user = self.session.query(User).filter(User.id==userId).update({"user_status_id":statusId})
+        self.update()
+        return user

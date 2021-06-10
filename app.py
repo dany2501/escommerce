@@ -1,17 +1,10 @@
-from dto.Cart import Cart
 from flask import Flask, jsonify, Response
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
-from flask_apscheduler import APScheduler
-import schedule
-import time
 from flask_cors import CORS
 from flask_mail import Mail, Message
 #config enviroment
 from dynaconf import FlaskDynaconf
-import requests
-import json
-
 config_cache = {
     'CACHE_TYPE': 'filesystem',
     'CACHE_DIR': 'cache',
@@ -20,13 +13,12 @@ config_cache = {
 
 #ENV_FOR_DYNACONF production, development or default, staging
 ENV_FOR_DYNACONF = "default"
-GLOBAL_ENV_FOR_DYNACONF = "skeleton-flask-kea-v1"
+GLOBAL_ENV_FOR_DYNACONF = "skeleton-flask-v1"
 ENVVAR_FOR_DYNACONF = "env_config.toml"
 MERGE_ENABLED_FOR_DYNACONF= "true"
 SETTINGS_MODULE_FOR_DYNACONF= "env_config.toml"
 
 app = Flask(__name__)
-scheduler = APScheduler()
 api = Api(app)
 app.config.from_mapping(config_cache)
 
@@ -67,16 +59,16 @@ from rest.resource.SignUp import SignUpResource
 from rest.resource.Products import ProductsResource
 from rest.resource.Cart import CartResource
 from rest.resource.Address import AddressResource
+from rest.resource.Email import EmailResource
+from rest.resource.Order import OrderResource
 
 api.add_resource(SignUpResource,'/sign-up')
 api.add_resource(LoginResource,'/login')
 api.add_resource(ProductsResource,'/products')
 api.add_resource(CartResource,'/cart')
 api.add_resource(AddressResource,'/address')
-
-@app.route("/")
-def hello():
-    return "<h1>API ::: Python Skeleton</h1>"
+api.add_resource(EmailResource,'/email')
+api.add_resource(OrderResource,'/order')
 
 @app.route('/logout')
 def logout():

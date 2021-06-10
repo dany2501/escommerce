@@ -11,8 +11,8 @@ MAIL_SERVER = 'smtp.gmail.com'
 MAIL_PORT = 465
 MAIL_USE_TLS = false
 MAIL_USE_SSL = true
-MAIL_USERNAME= "replace_email_here"
-MAIL_PASSWORD = "replace_password_here"
+MAIL_USERNAME= "escommerce.ipn@gmail.com"
+MAIL_PASSWORD = "qpzbnyqgkaebjrkn"
 JWT_SECRET_KEY = "replace_secret_key"
 JWT_IDENTITY_CLAIM = "secret_identity"
 REFRESH_EXP_LENGTH = 30
@@ -23,5 +23,32 @@ SECRET_ENCRYPT = "tkKgTgwFRy"
 ESCOMMERCE_POOL_CONNECT=[{
         context="escommerce_db",
         database_uri="mysql+pymysql://root:hecd010225@127.0.0.1/escommerce"
+    }
+    ]
+[production]
+protocol = "http://"
+host = "143.244.156.198:5001"
+dynaconf_merge = true
+SERVER_NAME = "143.244.156.198:5001"
+DEBUG = false
+SQLALCHEMY_DATABASE_URI = "mysql+pymysql://doadmin:ie0q7zrykqh9z349@db-mysql-nyc3-95714-do-user-9367327-0.b.db.ondigitalocean.com:25060/escommerce?ssl-mode=REQUIRED"
+SQLALCHEMY_TRACK_MODIFICATIONS = false
+SQLALCHEMY_ECHO = true
+MAIL_SERVER = 'smtp.gmail.com'
+MAIL_PORT = 465
+MAIL_USE_TLS = false
+MAIL_USE_SSL = true
+MAIL_USERNAME= "escommerce.ipn@gmail.com"
+MAIL_PASSWORD = "qpzbnyqgkaebjrkn"
+JWT_SECRET_KEY = "replace_secret_key"
+JWT_IDENTITY_CLAIM = "secret_identity"
+REFRESH_EXP_LENGTH = 30
+ACCESS_EXP_LENGTH = 10
+JWT_ACCESS_TOKEN_EXPIRES = 60
+JWT_REFRESH_TOKEN_EXPIRES = 1000
+SECRET_ENCRYPT = "tkKgTgwFRy"
+ESCOMMERCE_POOL_CONNECT=[{
+        context="escommerce_db",
+        database_uri="mysql+pymysql://doadmin:ie0q7zrykqh9z349@db-mysql-nyc3-95714-do-user-9367327-0.b.db.ondigitalocean.com:25060/escommerce?ssl-mode=REQUIRED"
     }
     ]

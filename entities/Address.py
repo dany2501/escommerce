@@ -31,3 +31,10 @@ class AddressModel(AbstractModel):
             return address
         else:
             return None
+    
+    def getAddressById(self,id):
+        address = self.session.query(Address).filter(Address.id==id).first()
+        if address is not None:
+            return address
+        else:
+            return None

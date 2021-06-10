@@ -17,7 +17,9 @@ class ProductModel(AbstractModel):
             print("Throw Exception")
 
     def getProductsByCategoryId(self,categoryId):
+        print(categoryId)
         products = self.session.query(Product).filter(Product.category_id==categoryId).all()
+        print(products)
         if products is not None:
             return products
         else:

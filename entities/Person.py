@@ -1,9 +1,5 @@
-from decimal import Decimal
-from flask import Flask
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Integer,Column,String,DateTime,Boolean,ForeignKey,Float,Text,Time,DECIMAL
-from sqlalchemy.sql.expression import update
-from sqlalchemy.sql.sqltypes import Date
 from entities.AbstractModel import AbstractModel
 Base = declarative_base()
 
@@ -12,6 +8,7 @@ class Person(Base):
     id = Column(Integer,primary_key=True,autoincrement=True)
     name = Column(String(50),nullable=False)
     last_name = Column(String(50),nullable=False)
+    second_last_name = Column(String(50),nullable=True)
 
     def getId(self):
         return self.id
@@ -30,6 +27,30 @@ class Person(Base):
 
     def setLastName(self,last_name):
         self.last_name=last_name
+    
+    def getSecondLastName(self):
+        return self.second_last_name
+
+    def setSecondLastName(self,second_last_name):
+        self.second_last_name=second_last_name
+
+class UserStatus(Base):
+    __tablename__='esc_user_status'
+    id = Column(Integer,primary_key=True,autoincrement=True)
+    status = Column(String(45),nullable=False)
+
+    def getId(self):
+        return self.id
+    
+    def setId(self,id):
+        self.id = id
+    
+    def getStatus(self):
+        return self.status
+    
+    def setStatus(self,status):
+        self.status=status
+
 
 class User(Base):
     __tablename__='esc_user'
@@ -37,6 +58,8 @@ class User(Base):
     email = Column(String(100),nullable=False)
     password = Column(String(50),nullable=False)
     person_id = Column(Integer,ForeignKey('esc_person.id'),nullable=True)
+    code = Column(String(10),nullable=False)
+    user_status_id = Column(Integer,ForeignKey('esc_user_status.id'),nullable=False)
 
     def getId(self):
         return self.id
@@ -61,6 +84,18 @@ class User(Base):
     
     def setPersonId(self,person_id):
         self.person_id=person_id
+    
+    def getCode(self):
+        return self.code
+    
+    def setCode(self,code):
+        self.code=code
+    
+    def getStatusId(self):
+        return self.user_status_id
+    
+    def setStatusId(self,status_id):
+        self.user_status_id=status_id
 
 class Client(Base):
     __tablename__='esc_client'
@@ -379,7 +414,7 @@ class PaymentMethod(Base):
         return self.client_id
 
     def setClientId(self,clientId):
-        self.client_id=client_id
+        self.client_id=clientId
 
 class Order(Base):
     __tablename__ = "esc_order"
@@ -389,7 +424,63 @@ class Order(Base):
     address_id = Column(Integer,ForeignKey('esc_address.id'),nullable=False)
     payment_id = Column(Integer,ForeignKey('esc_client.id'),nullable=False)
     delivery_id = Column(Integer,ForeignKey('esc_client.id'),nullable=False)
-    created_at = Column(DateTime,nullable=False)
+    ordered_at = Column(DateTime,nullable=False)
+    delivered_at = Column(DateTime,nullable=False)
+    canceled_at = Column(DateTime,nullable=False)
+
+    def getId(self):
+        return self.id
+    
+    def setId(self,id):
+        self.id = id
+
+    def getCartId(self):
+        return self.cart_id
+    
+    def setCartId(self,cartId):
+        self.cart_id=cartId
+    
+    def getStatusId(self):
+        return self.status_id
+    
+    def setStatusId(self,statusId):
+        self.status_id=statusId
+    
+    def getAddressId(self):
+        return self.address_id
+    
+    def setAddresId(self,addressId):
+        self.address_id = addressId
+    
+    def getPaymentId(self):
+        return self.payment_id
+    
+    def setPaymentId(self,paymentId):
+        self.payment_id=paymentId
+    
+    def getDeliveryId(self):
+        return self.delivery_id
+    
+    def setDeliveryId(self,deliveryId):
+        self.delivery_id=deliveryId
+    
+    def getOrderedAt(self):
+        return self.ordered_at
+    
+    def setOrderedAt(self,orderedAt):
+        self.ordered_at=orderedAt
+    
+    def getDeliveredAt(self):
+        return self.delivered_at
+    
+    def setDeliveredAt(self,deliveredAt):
+        self.delivered_at=deliveredAt
+    
+    def getCanceledAt(self):
+        return self.canceled_at
+    
+    def setCanceledAt(self,canceledAt):
+        self.canceled_at=canceledAt
 
 
 
@@ -400,11 +491,13 @@ class PersonModel(AbstractModel):
         super(PersonModel,self).__init__(url)
         self.url=url
 
-    def createPerson(self,name,lastName):
+    def createPerson(self,name,lastName,secondLastName):
         person = Person()
         person.setName(name)
         person.setLastName(lastName)
+        person.setSecondLastName(secondLastName)
         self.insert(person)
+        return person
 
     def updatePerson(self,personId,name,lastName):
         self.session.query(Person).filter(Person.id==personId).update({"name":name,"last_name":lastName})

@@ -1,11 +1,5 @@
-from flask import Flask
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Integer,Column,String,DateTime,Boolean,ForeignKey,Float,Text,Time,DECIMAL
-from sqlalchemy.sql.sqltypes import CLOB
-from entities.User import User
-import hashlib
+from datetime import date, datetime
 from entities.AbstractModel import AbstractModel
-Base = declarative_base()
 from entities.Person import Cart,CartProduct
 
 class CartModel(AbstractModel):
@@ -33,6 +27,7 @@ class CartModel(AbstractModel):
     def addProductToCart(self,cartId,productId,qty):
         product = self.session.query(CartProduct).filter(CartProduct.cart_id==cartId,CartProduct.product_id==productId).first()
         if product is not None:
+            self.session.query(Cart).filter(Cart.id==cartId).update({"updated_at":datetime.now()})
             self.session.query(CartProduct).filter(CartProduct.cart_id==cartId,CartProduct.product_id==productId).update({"qty":qty})
             self.update()
         else:
@@ -54,4 +49,10 @@ class CartModel(AbstractModel):
         if cart is not None:
             for product in cart:
                 self.delete(product)
+            return True
+
+    def deleteProductById(self,cartId,productId):
+        product = self.session.query(CartProduct).filter(CartProduct.cart_id==cartId,CartProduct.product_id==productId).first()
+        if product is not None:
+            self.delete(product)
             return True
