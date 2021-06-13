@@ -4,7 +4,7 @@ from rest.controller.LoginController import LoginController
 from rest.controller.Response import ResponseFactory
 class LoginResource(Resource):
     def post (self):
-        params = request.form
+        params = request.get_json()
         email = params['email']
         password = params['password']
         if email and password:

@@ -15,7 +15,7 @@ class EmailResource(Resource):
 
     def post(self):
         token = request.headers["token"]
-        params = request.form
+        params = request.get_json()
         code = params["code"]
         email = params["email"]
         return ResponseFactory.toResponse(

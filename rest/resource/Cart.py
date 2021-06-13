@@ -15,7 +15,7 @@ class CartResource(Resource):
 
     def post(self):
         token = request.headers["token"]
-        params = request.form
+        params = request.get_json()
         productId = params["productId"]
         qty = params["qty"]
         return ResponseFactory.toResponse(
@@ -23,7 +23,7 @@ class CartResource(Resource):
         )
     def put(self):
         token = request.headers["token"]
-        params = request.form
+        params = request.get_json()
         productId = params["productId"]
         return ResponseFactory.toResponse(
             CartController().deleteProduct(token, productId)

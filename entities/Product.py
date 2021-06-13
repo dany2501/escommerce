@@ -1,7 +1,6 @@
-from entities.User import User
-import hashlib
+from sqlalchemy import or_
 from entities.AbstractModel import AbstractModel
-from entities.Person import Client,User,Person,Product,ProductImage
+from entities.Person import Product,ProductImage
 
 class ProductModel(AbstractModel):
 
@@ -17,9 +16,7 @@ class ProductModel(AbstractModel):
             print("Throw Exception")
 
     def getProductsByCategoryId(self,categoryId):
-        print(categoryId)
         products = self.session.query(Product).filter(Product.category_id==categoryId).all()
-        print(products)
         if products is not None:
             return products
         else:
@@ -36,5 +33,12 @@ class ProductModel(AbstractModel):
         image = self.session.query(ProductImage).filter(ProductImage.product_id==productId).first()
         if image is not None:
             return image
+        else:
+            return None
+
+    def getProductsByName(self,name):
+        products = self.session.query(Product).filter(or_(Product.description.like("%"+name+"%"),Product.name.like("%"+name+"%"))).all()
+        if products is not None:
+            return products
         else:
             return None

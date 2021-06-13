@@ -16,7 +16,7 @@ class OrderResource(Resource):
 
     def post(self):
         token = request.headers['token']
-        params = request.form
+        params = request.get_json()
         paymentId = params['paymentId']
         addressId = params['addressId']
         return ResponseFactory.toResponse(OrderController().createOrder(token,addressId,paymentId))

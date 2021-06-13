@@ -14,6 +14,6 @@ class AddressResource(Resource):
 
     def post(self):
         headers = request.headers['token']
-        params = request.form
+        params = request.get_json()
         if params is not None:
             return ResponseFactory.toResponse(AddressController().createAddress(params,headers))

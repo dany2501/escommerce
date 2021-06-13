@@ -6,7 +6,7 @@ from rest.controller.Response import ResponseFactory
 class SignUpResource(Resource):
     
     def post (self):
-        params = request.form
+        params = request.get_json()
         email = params['email']
         password = params['password']
         confirmPass = params['confirmPass']

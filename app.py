@@ -12,7 +12,7 @@ config_cache = {
 }
 
 #ENV_FOR_DYNACONF production, development or default, staging
-ENV_FOR_DYNACONF = "production"
+ENV_FOR_DYNACONF = "default"
 GLOBAL_ENV_FOR_DYNACONF = "skeleton-flask-v1"
 ENVVAR_FOR_DYNACONF = "env_config.toml"
 MERGE_ENABLED_FOR_DYNACONF= "true"
