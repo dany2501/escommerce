@@ -1,5 +1,3 @@
-from cryptography import fernet
-from entities.Person import PaymentMethod
 from rest.controller.Controller import Controller
 from entities.Client import ClientModel
 from entities.PaymentModel import PaymentModel
