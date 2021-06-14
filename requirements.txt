@@ -58,7 +58,7 @@ mongomock==3.22.1
 msgpack==1.0.2
 Naked==0.1.31
 natsort==7.1.1
-numpy==1.20.3
+numpy
 packaging==20.9
 phonenumbers==8.12.20
 Pillow==8.2.0
