@@ -2,7 +2,8 @@ from flask import Flask
 
 class Address(dict):
 
-    def __init__(self,name,lastName,street,extNum,city,suburb,zipCode,phone):
+    def __init__(self,name,lastName,street,extNum,city,suburb,zipCode,phone,id):
+        self.__id=id
         self.__name = name
         self.__lastName = lastName
         self.__street = street
@@ -11,8 +12,11 @@ class Address(dict):
         self.__suburb = suburb
         self.__zipCode = zipCode
         self.__phone = phone
-        dict.__init__(self,name=name,lastName=lastName,street=street,extNum=extNum,city=city,suburb=suburb,zipCode=zipCode,phone=phone)
+        dict.__init__(self,name=name,lastName=lastName,street=street,extNum=extNum,city=city,suburb=suburb,zipCode=zipCode,phone=phone,id=id)
         
+    def getId(self):
+        return self.__id
+
     def getName(self):
         return self.__name
     

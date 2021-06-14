@@ -1,7 +1,6 @@
 from datetime import date, datetime, timedelta
-from entities.Client import ClientModel,Client
-from entities.Person import Address, Person,PersonModel
-from entities.User import User,UserModel
+from entities.PaymentModel import PaymentModel
+from entities.Client import ClientModel
 from entities.Order import OrderModel
 from entities.Cart import CartModel
 from entities.Address import AddressModel
@@ -24,17 +23,31 @@ class OrderController(Controller):
             bodyRS = OrderRS(True)
             client = ClientModel(url).getDataClient(token)
             if client is not None:
-                cart = CartModel(url).getCartByClientId(client[0].getId)
+                cart = CartModel(url).getCartByClientId(client[0].getId())
+
+                if cart is None:
+                    bodyRS = OrderRS(False,Error(8000,"Ocurrió un error, intenta más tarde."))
+                    return Response(headerRS,bodyRS)
+                    
                 address = AddressModel(url).getAddressById(addressId)
-                if cart is not None:
-                    order = OrderModel(url).createOrder(cart.getId(),address.getId(),paymentId)
-                    if order is not None:
-                        bodyRS.setOrderId(order.getId())
-                        bodyRS.setArrivalDate(order.getOrderedAt()+timedelta(3))
-                        return Response(headerRS,bodyRS)
-                    else:
-                        bodyRS = OrderRS(False,Error(8003,"Ocurrió un error, intenta más tarde."))
-                        return Response(headerRS,bodyRS)
+                if address is None:
+                    bodyRS = OrderRS(False,Error(8005,"Ocurrió un error con la dirección de envío, intenta más tarde."))
+                    return Response(headerRS,bodyRS)
+                    
+                payment = PaymentModel(url).getPaymentById(paymentId)
+                if payment is None:
+                    bodyRS = OrderRS(False,Error(8004,"Ocurrió un error con el método de pago, intenta más tarde."))
+                    return Response(headerRS,bodyRS)
+
+                
+                order = OrderModel(url).createOrder(cart.getId(),address.getId(),payment.getId())
+                if order is not None:
+                    cart.setOrderedAt(datetime.now())
+                    CartModel(url).cartOrdered(cart.getId())
+                    bodyRS.setOrderId(order.getId())
+                    bodyRS.setArrivalDate(str(order.getOrderedAt()+timedelta(3)))
+                    return Response(headerRS,bodyRS)
+                    
                 else:
                     bodyRS = OrderRS(False,Error(8000,"Ocurrió un error, intenta más tarde."))
                     return Response(headerRS,bodyRS)

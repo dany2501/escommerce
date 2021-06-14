@@ -2,6 +2,7 @@ from dto.Client import Client
 from dto.Product import Product
 from dto.Cart import Cart
 from dto.Address import Address
+from dto.Payment import Payment
 
 class Mapper():
 
@@ -17,4 +18,8 @@ class Mapper():
 
     def mapToAddress(self,address):
         name = address.getName().split(" ")
-        return Address(name.pop(0),name,address.getStreet(),address.getExtNumber(),address.getCity(),address.getSuburb(),address.getZipCode(),address.getPhone())
+        return Address(name.pop(0),name,address.getStreet(),address.getExtNumber(),address.getCity(),address.getSuburb(),address.getZipCode(),address.getPhone(),address.getId())
+    
+    def mapToPayment(self,payment,card,digits):
+        return Payment(payment.getId(),payment.getCardholder(),card,digits,payment.getYearExpiration(),payment.getMonthExpiration(),payment.getCvv())
+

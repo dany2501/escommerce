@@ -280,6 +280,23 @@ class StatusCart(Base):
     def setStatus(self,status):
         self.status=status
 
+class StatusOrder(Base):
+    __tablename__ = "esc_status_order"
+    id = Column(Integer,primary_key=True,autoincrement=True)
+    status = Column(String(45),nullable=False)
+
+    def getId(self):
+        return self.id
+    
+    def setId(self,id):
+        self.id = id
+
+    def getStatus(self):
+        return self.status
+    
+    def setStatus(self,status):
+        self.status=status
+
 class ProductImage(Base):
     __tablename__ = "esc_product_image"
     id = Column(Integer,primary_key=True,autoincrement=True)
@@ -378,6 +395,7 @@ class PaymentMethod(Base):
     token = Column(String(200),nullable=False)
     month_expiration = Column(Integer,nullable=False)
     year_expiration = Column(Integer,nullable=False)
+    cvv = Column(Integer,nullable=False)
     client_id = Column(Integer,ForeignKey('esc_client.id'),nullable=False)
 
     def getId(self):
@@ -409,6 +427,12 @@ class PaymentMethod(Base):
     
     def setYearExpiration(self,yearExpiration):
         self.year_expiration = yearExpiration
+    
+    def getCvv(self):
+        return self.cvv
+    
+    def setCvv(self,cvv):
+        self.cvv = cvv
 
     def getClientId(self):
         return self.client_id

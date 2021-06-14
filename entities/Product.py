@@ -10,6 +10,7 @@ class ProductModel(AbstractModel):
 
     def getProducts(self):
         products = self.session.query(Product).all()
+        self.session.close()
         if products is not None:
             return products
         else:
@@ -17,6 +18,7 @@ class ProductModel(AbstractModel):
 
     def getProductsByCategoryId(self,categoryId):
         products = self.session.query(Product).filter(Product.category_id==categoryId).all()
+        self.session.close()
         if products is not None:
             return products
         else:
@@ -24,6 +26,7 @@ class ProductModel(AbstractModel):
 
     def getProductById(self,productId):
         product = self.session.query(Product).filter(Product.id==productId).first()
+        self.session.close()
         if product is not None:
             return product
         else:
@@ -31,6 +34,7 @@ class ProductModel(AbstractModel):
 
     def getImageByProductId(self,productId):
         image = self.session.query(ProductImage).filter(ProductImage.product_id==productId).first()
+        self.session.close()
         if image is not None:
             return image
         else:
@@ -38,6 +42,7 @@ class ProductModel(AbstractModel):
 
     def getProductsByName(self,name):
         products = self.session.query(Product).filter(or_(Product.description.like("%"+name+"%"),Product.name.like("%"+name+"%"))).all()
+        self.session.close()
         if products is not None:
             return products
         else:

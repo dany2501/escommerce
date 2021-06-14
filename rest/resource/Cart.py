@@ -16,6 +16,7 @@ class CartResource(Resource):
     def post(self):
         token = request.headers["token"]
         params = request.get_json()
+        print(params)
         productId = params["productId"]
         qty = params["qty"]
         return ResponseFactory.toResponse(

@@ -56,3 +56,8 @@ class CartModel(AbstractModel):
         if product is not None:
             self.delete(product)
             return True
+
+    def cartOrdered(self,cartId):
+        self.session.query(Cart).filter(Cart.id==cartId).update({"updated_at":datetime.now(),"status_id":2})
+        self.update()
+        return True

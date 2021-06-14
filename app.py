@@ -61,6 +61,7 @@ from rest.resource.Cart import CartResource
 from rest.resource.Address import AddressResource
 from rest.resource.Email import EmailResource
 from rest.resource.Order import OrderResource
+from rest.resource.Payment import PaymentResource
 
 api.add_resource(SignUpResource,'/sign-up')
 api.add_resource(LoginResource,'/login')
@@ -69,6 +70,7 @@ api.add_resource(CartResource,'/cart')
 api.add_resource(AddressResource,'/address')
 api.add_resource(EmailResource,'/email')
 api.add_resource(OrderResource,'/order')
+api.add_resource(PaymentResource,'/payment')
 
 @app.route('/logout')
 def logout():

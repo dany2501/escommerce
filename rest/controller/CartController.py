@@ -1,7 +1,7 @@
 from entities.Product import ProductModel
 from entities.Cart import CartModel
 from rest.controller.Controller import Controller
-from datetime import date, datetime
+from datetime import datetime
 from entities.Client import ClientModel
 from entities.Product import ProductModel
 from entities.Cart import CartModel
