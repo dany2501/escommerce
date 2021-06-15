@@ -1,12 +1,5 @@
-from flask import Flask
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Integer,Column,String,DateTime,Boolean,ForeignKey,Float,Text,Time,DECIMAL
-from sqlalchemy.sql.sqltypes import CLOB
-from entities.User import User
-import hashlib
-from entities.AbstractModel import AbstractModel
-Base = declarative_base()
-from entities.Person import Address
+from model.AbstractModel import AbstractModel
+from entities.entities import Address
 
 class AddressModel(AbstractModel):
     def __init__(self, url):

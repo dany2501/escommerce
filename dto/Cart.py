@@ -10,5 +10,5 @@ class Cart(dict):
     def getProduct(self):
         return self.__product
     
-    def getQy(self):
+    def getQty(self):
         return self.__qty

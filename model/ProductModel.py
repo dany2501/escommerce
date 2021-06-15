@@ -1,6 +1,6 @@
 from sqlalchemy import or_
-from entities.AbstractModel import AbstractModel
-from entities.Person import Product,ProductImage
+from model.AbstractModel import AbstractModel
+from entities.entities import Product,ProductImage
 
 class ProductModel(AbstractModel):
 
@@ -33,7 +33,7 @@ class ProductModel(AbstractModel):
             print("Throw Exception")
 
     def getImageByProductId(self,productId):
-        image = self.session.query(ProductImage).filter(ProductImage.product_id==productId).first()
+        image = self.session.query(ProductImage).filter(ProductImage.product_id==productId).limit(15).first()
         self.session.close()
         if image is not None:
             return image

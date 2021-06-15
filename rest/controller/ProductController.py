@@ -1,11 +1,11 @@
-from requests.api import head
 from rest.controller.Controller import Controller
-from entities.Product import ProductModel
+from model.ProductModel import ProductModel
 from cerberus.responses.HeaderRS import HeaderRS
 from cerberus.responses.Response import Response
 from rest.Responses.ProductsRS import ProductsRS
 from mappers.mapper import Mapper
 from cerberus.dtos.Error import Error
+import random
 
 
 class ProductController(Controller):
@@ -19,9 +19,11 @@ class ProductController(Controller):
         products = ProductModel(url).getProducts()
         if products is not None:
             productList = []
-            for product in products:
+            lr = random.sample(products, len(products))
+            for product in lr:
                 image = ProductModel(url).getImageByProductId(product.getId())
-                productList.append(Mapper().mapToProduct(product, image.getUrl()))
+                if image is not None:
+                    productList.append(Mapper().mapToProduct(product, image.getUrl()))
             bodyRS.setProducts(productList)
             return Response(headerRS, bodyRS)
         else:
@@ -38,7 +40,8 @@ class ProductController(Controller):
             products = ProductModel(url).getProductsByCategoryId(categoryId)
         if products is not None:
             productList = []
-            for product in products:
+            lr = random.sample(products, len(products))
+            for product in lr:
                 image = ProductModel(url).getImageByProductId(product.getId())
                 productList.append(Mapper().mapToProduct(product, image.getUrl()))
             bodyRS.setProducts(productList)

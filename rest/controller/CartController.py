@@ -1,10 +1,11 @@
-from entities.Product import ProductModel
-from entities.Cart import CartModel
+from dto.Cart import Cart
+from model.ProductModel import ProductModel
+from model.CartModel import CartModel
 from rest.controller.Controller import Controller
 from datetime import datetime
-from entities.Client import ClientModel
-from entities.Product import ProductModel
-from entities.Cart import CartModel
+from model.ClientModel import ClientModel
+from model.ProductModel import ProductModel
+from model.CartModel import CartModel
 from cerberus.responses.HeaderRS import HeaderRS
 from cerberus.responses.Response import Response
 from rest.Responses.CartRS import CartRS
@@ -16,19 +17,21 @@ class CartController(Controller):
     def __init__(self):
         super(CartController, self).__init__()
 
-    def addProduct(self, token, productId, qty):
+    def addProduct(self, token, productId, qty,cartType):
         if token is not None and productId is not None:
             bodyRS = CartRS(True)
             headerRS = HeaderRS()
             url = self.getUrl()
             client = ClientModel(url).getDataClient(token)
             if client is not None:
-                cart = CartModel(url).getCartByClientId(client[0].getId())
+                cart = CartModel(url).getCartByClientId(client[0].getId(),cartType)
                 if cart is None:
-                    cart = CartModel(url).createCart(client[0].getId(), 1, datetime.now())
+                    cart = CartModel(url).createCart(client[0].getId(), 1, datetime.now(),cartType)
                 product = ProductModel(url).getProductById(productId)
                 if product is not None:
                     if product.getStock() >= int(qty):
+                        if int(cartType) ==3:
+                            CartModel(url).deleteProducts(cart.getId())
                         CartModel(url).addProductToCart(cart.getId(), product.getId(), qty)
                         products = CartModel(url).getProductsCart(cart.getId())
                         if products is not None:
@@ -55,14 +58,14 @@ class CartController(Controller):
             headerRS = HeaderRS()
             return Response(headerRS, bodyRS)
 
-    def getProducts(self, token):
+    def getProducts(self, token,cartType):
         if token is not None:
             bodyRS = CartRS(True)
             headerRS = HeaderRS()
             url = self.getUrl()
             client = ClientModel(url).getDataClient(token)
             if client is not None:
-                cart = CartModel(url).getCartByClientId(client[0].getId())
+                cart = CartModel(url).getCartByClientId(client[0].getId(),cartType)
                 if cart is not None:
                     products = CartModel(url).getProductsCart(cart.getId())
                     if products is not None:
@@ -91,18 +94,17 @@ class CartController(Controller):
             headerRS = HeaderRS()
             return Response(headerRS, bodyRS)
 
-    def deleteProducts(self, token):
+    def deleteProducts(self, token,cartType):
         headerRS = HeaderRS()
         if token is not None:
             bodyRS = CartRS(True)
             url = self.getUrl()
             client = ClientModel(url).getDataClient(token)
             if client is not None:
-                cart = CartModel(url).getCartByClientId(client[0].getId())
+                cart = CartModel(url).getCartByClientId(client[0].getId(),cartType)
                 if cart is not None:
                     delete = CartModel(url).deleteProducts(cart.getId())
                     if delete:
-                        print("Deleted")
                         return Response(headerRS, bodyRS)
                 else:
                     bodyRS = CartRS(False, Error(6002, "No cuentas con productos"))
@@ -114,7 +116,7 @@ class CartController(Controller):
             bodyRS = CartRS(False, Error(6003, "No se encontró al cliente"))
             return Response(headerRS, bodyRS)
 
-    def deleteProduct(self,token,productId):
+    def deleteProduct(self,token,productId,cartType):
         headerRS = HeaderRS()
         if token is not None:
             if productId is not None:
@@ -122,7 +124,7 @@ class CartController(Controller):
                 url = self.getUrl()
                 client = ClientModel(url).getDataClient(token)
                 if client is not None:
-                    cart = CartModel(url).getCartByClientId(client[0].getId())
+                    cart = CartModel(url).getCartByClientId(client[0].getId(),cartType)
                     if cart is not None:
                         success = CartModel(url).deleteProductById(cart.getId(),productId)
                         if success:

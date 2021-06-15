@@ -19,4 +19,5 @@ class OrderResource(Resource):
         params = request.get_json()
         paymentId = params['paymentId']
         addressId = params['addressId']
-        return ResponseFactory.toResponse(OrderController().createOrder(token,addressId,paymentId))
+        cartType = params['cartType']
+        return ResponseFactory.toResponse(OrderController().createOrder(token,addressId,paymentId,cartType))

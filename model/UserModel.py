@@ -1,7 +1,7 @@
-from entities.Person import Person
+from entities.entities import Person
 import hashlib
-from entities.AbstractModel import AbstractModel
-from entities.Person import User
+from model.AbstractModel import AbstractModel
+from entities.entities import User
 
 
 class UserModel(AbstractModel):

@@ -1,7 +1,7 @@
 from dto.Payment import Payment
 from sqlalchemy import or_
-from entities.AbstractModel import AbstractModel
-from entities.Person import PaymentMethod
+from model.AbstractModel import AbstractModel
+from entities.entities import PaymentMethod
 
 class PaymentModel(AbstractModel):
 

@@ -1,6 +1,5 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Integer,Column,String,DateTime,Boolean,ForeignKey,Float,Text,Time,DECIMAL
-from entities.AbstractModel import AbstractModel
 Base = declarative_base()
 
 class Person(Base):
@@ -80,10 +79,10 @@ class User(Base):
         self.password=password
     
     def getPersonId(self):
-        return self.person_id
+        return self.entities_id
     
     def setPersonId(self,person_id):
-        self.person_id=person_id
+        self.entities_id=person_id
     
     def getCode(self):
         return self.code
@@ -192,6 +191,7 @@ class Cart(Base):
     id = Column(Integer,primary_key=True,autoincrement=True)
     client_id = Column(Integer,ForeignKey('esc_client.id'),nullable=False)
     status_id = Column(Integer,ForeignKey('esc_status_cart.id'),nullable=False)
+    cart_type_id = Column(Integer,ForeignKey('esc_cart_type.id'),nullable=False)
     created_at = Column(DateTime,nullable=False)
     updated_at = Column(DateTime,nullable=False)
     ordered_at = Column(DateTime,nullable=True)
@@ -213,6 +213,12 @@ class Cart(Base):
     
     def setStatusId(self,statusId):
         self.status_id=statusId
+    
+    def getCartTypeId(self):
+        return self.cart_type_id
+    
+    def setCartTypeId(self,cartTypeId):
+        self.cart_type_id=cartTypeId
 
     def getCreatedAt(self):
         return self.created_at
@@ -262,6 +268,23 @@ class CartProduct(Base):
 
     def setQty(self,qty):
         self.qty=qty
+
+class CartType(Base):
+    __tablename__ = "esc_cart_type"
+    id = Column(Integer,primary_key=True,autoincrement=True)
+    type = Column(String(45),nullable=False)
+
+    def getId(self):
+        return self.id
+    
+    def setId(self,id):
+        self.id = id
+
+    def getType(self):
+        return self.type
+    
+    def setType(self,type):
+        self.type=type
 
 class StatusCart(Base):
     __tablename__ = "esc_status_cart"
@@ -505,45 +528,3 @@ class Order(Base):
     
     def setCanceledAt(self,canceledAt):
         self.canceled_at=canceledAt
-
-
-
-
-class PersonModel(AbstractModel):
-
-    def __init__(self, url):
-        super(PersonModel,self).__init__(url)
-        self.url=url
-
-    def createPerson(self,name,lastName,secondLastName):
-        person = Person()
-        person.setName(name)
-        person.setLastName(lastName)
-        person.setSecondLastName(secondLastName)
-        self.insert(person)
-        return person
-
-    def updatePerson(self,personId,name,lastName):
-        self.session.query(Person).filter(Person.id==personId).update({"name":name,"last_name":lastName})
-        self.update()
-        return [True,"Update successfully"]
-
-    def getPerson(self,personId):
-        person = self.session.query(Person).filter(Person.id==personId).first()
-        if person is not None:
-            return person
-        else:
-            print("Throw Exception")
-
-    def deletePerson(self,personId):
-        person = self.session.query(Person).filter(Person.id==personId).first()
-        self.session.delete(person)
-        self.session.commit()
-        return [True,"User deleted successfully"]
-
-    def getLastPersonCreated(self):
-        person = self.session.query(Person).order_by(Person.id.desc()).first()
-        if person is not None:
-            return person
-        else:
-            print("Throw Exception")

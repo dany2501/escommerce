@@ -1,8 +1,8 @@
 from rest.controller.Controller import Controller
 from datetime import date, datetime
-from entities.Client import ClientModel,Client
-from entities.Person import Person,PersonModel
-from entities.User import User,UserModel
+from model.ClientModel import ClientModel
+from model.PersonModel import PersonModel
+from model.UserModel import User,UserModel
 from cerberus.responses.HeaderRS import HeaderRS
 from cerberus.dtos.Error import Error
 from cerberus.responses.Response import Response

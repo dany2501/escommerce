@@ -1,8 +1,7 @@
-from flask import Flask, jsonify, Response
+from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
-from flask_cors import CORS
-from flask_mail import Mail, Message
+from flask_mail import Mail
 #config enviroment
 from dynaconf import FlaskDynaconf
 config_cache = {
@@ -12,7 +11,7 @@ config_cache = {
 }
 
 #ENV_FOR_DYNACONF production, development or default, staging
-ENV_FOR_DYNACONF = "production"
+ENV_FOR_DYNACONF = "default"
 GLOBAL_ENV_FOR_DYNACONF = "skeleton-flask-v1"
 ENVVAR_FOR_DYNACONF = "env_config.toml"
 MERGE_ENABLED_FOR_DYNACONF= "true"

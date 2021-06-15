@@ -1,6 +1,6 @@
 from rest.controller.Controller import Controller
 from datetime import date, datetime
-from entities.Client import ClientModel
+from model.ClientModel import ClientModel
 from cerberus.responses.HeaderRS import HeaderRS
 from cerberus.responses.Response import Response
 from rest.Responses.LoginRS import LoginRS

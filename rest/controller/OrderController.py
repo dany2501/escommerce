@@ -1,9 +1,9 @@
 from datetime import date, datetime, timedelta
-from entities.PaymentModel import PaymentModel
-from entities.Client import ClientModel
-from entities.Order import OrderModel
-from entities.Cart import CartModel
-from entities.Address import AddressModel
+from model.PaymentModel import PaymentModel
+from model.ClientModel import ClientModel
+from model.OrderModel import OrderModel
+from model.CartModel import CartModel
+from model.AddressModel import AddressModel
 from cerberus.responses.HeaderRS import HeaderRS
 from cerberus.responses.Response import Response
 from rest.Responses.OrderRS import OrderRS
@@ -16,14 +16,14 @@ class OrderController(Controller):
     def __init__(self):
         super(OrderController,self).__init__()
 
-    def createOrder(self,token,addressId,paymentId):
+    def createOrder(self,token,addressId,paymentId,cartType):
         url = self.getUrl()
         headerRS = HeaderRS()
         if token is not None:
             bodyRS = OrderRS(True)
             client = ClientModel(url).getDataClient(token)
             if client is not None:
-                cart = CartModel(url).getCartByClientId(client[0].getId())
+                cart = CartModel(url).getCartByClientId(client[0].getId(),cartType)
 
                 if cart is None:
                     bodyRS = OrderRS(False,Error(8000,"Ocurrió un error, intenta más tarde."))

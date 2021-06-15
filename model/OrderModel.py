@@ -1,6 +1,6 @@
 from datetime import datetime
-from entities.AbstractModel import AbstractModel
-from entities.Person import Order
+from model.AbstractModel import AbstractModel
+from entities.entities import Order
 
 class OrderModel(AbstractModel):
 

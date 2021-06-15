@@ -1,6 +1,6 @@
 from datetime import date, datetime
-from entities.AbstractModel import AbstractModel
-from entities.Person import Cart,CartProduct
+from model.AbstractModel import AbstractModel
+from entities.entities import Cart,CartProduct
 
 class CartModel(AbstractModel):
 
@@ -8,17 +8,18 @@ class CartModel(AbstractModel):
         super(CartModel,self).__init__(url)
         self.url=url
 
-    def createCart(self,clientId,statusId,createdAt):
+    def createCart(self,clientId,statusId,createdAt,cartTypeId):
         cart = Cart()
         cart.setClientId(clientId)
         cart.setStatusId(statusId)
+        cart.setCartTypeId(cartTypeId)
         cart.setCreatedAt(createdAt)
         cart.setUpdatedAt(createdAt)
         self.insert(cart)
         return cart
 
-    def getCartByClientId(self,clientId):
-        cart = self.session.query(Cart).filter(Cart.client_id==clientId,Cart.status_id==1).first()
+    def getCartByClientId(self,clientId,cartType):
+        cart = self.session.query(Cart).filter(Cart.client_id==clientId,Cart.status_id==1,Cart.cart_type_id==cartType).first()
         if cart is not None:
             return cart
         else:
