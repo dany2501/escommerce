@@ -1,4 +1,7 @@
 from datetime import date, datetime, timedelta
+from dto.Cart import Cart
+from dto.Order import Order
+from model.ProductModel import ProductModel
 from model.PaymentModel import PaymentModel
 from model.ClientModel import ClientModel
 from model.OrderModel import OrderModel
@@ -42,10 +45,17 @@ class OrderController(Controller):
                 
                 order = OrderModel(url).createOrder(cart.getId(),address.getId(),payment.getId())
                 if order is not None:
-                    cart.setOrderedAt(datetime.now())
+
                     CartModel(url).cartOrdered(cart.getId())
+                    products = CartModel(url).getProductsCart(cart.getId())
+                    
+                    for product in products:
+                        ProductModel(url).updateStock(product.getQty(),product.getId())
+
+                    cart.setOrderedAt(datetime.now())
                     bodyRS.setOrderId(order.getId())
-                    bodyRS.setArrivalDate(str(order.getOrderedAt()+timedelta(3)))
+                    date = order.getOrderedAt()+timedelta(3)
+                    bodyRS.setArrivalDate(str(date.strftime('%Y-%m-%d')))
                     return Response(headerRS,bodyRS)
                     
                 else:
@@ -58,5 +68,38 @@ class OrderController(Controller):
         else:
             bodyRS = OrderRS(False,Error(8002,"Credenciales inválidas"))
             return Response(headerRS,bodyRS)
+
+    def getOrders(self,token):
+        url = self.getUrl()
+        headerRS = HeaderRS()
+        if token is not None:
+            bodyRS = OrderRS(True)
+            client = ClientModel(url).getDataClient(token)
+            if client is not None:
+                carts = CartModel(url).getOrders(client[0].getId())
+                ordersList=[]
+                for cart in carts:
+                    order = OrderModel(url).getOrder(cart.getId())
+                    date = order.getOrderedAt()+timedelta(3)
+                    products = CartModel(url).getProductsCart(cart.getId())
+                    price=0
+                    prods =0
+                    for product in products:
+                        prods = prods+product.getQty()
+                        p = ProductModel(url).getProductById(product.getProductId())
+                        if p is not None:
+                            price = price+p.getPrice()
+                    ordersList.append(Order(order.getId(),prods,int(price),date.strftime('%Y-%m-%d')))
+                bodyRS.setOrders(ordersList)
+                return Response(headerRS,bodyRS)
+
+                """for cart in carts:
+                    cart.setOrderedAt(datetime.now())
+                    bodyRS.setOrderId(order.getId())
+                    date = order.getOrderedAt()+timedelta(3).strftime('%Y-%m-%d')
+                    bodyRS.setArrivalDate(str(date))
+                    return Response(headerRS,bodyRS)"""
+
+
 
                 

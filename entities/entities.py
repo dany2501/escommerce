@@ -1,5 +1,6 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Integer,Column,String,DateTime,Boolean,ForeignKey,Float,Text,Time,DECIMAL
+from sqlalchemy.sql.expression import null
 Base = declarative_base()
 
 class Person(Base):
@@ -79,10 +80,10 @@ class User(Base):
         self.password=password
     
     def getPersonId(self):
-        return self.entities_id
+        return self.person_id
     
     def setPersonId(self,person_id):
-        self.entities_id=person_id
+        self.person_id=person_id
     
     def getCode(self):
         return self.code
@@ -528,3 +529,45 @@ class Order(Base):
     
     def setCanceledAt(self,canceledAt):
         self.canceled_at=canceledAt
+
+
+class Delegacion(Base):
+    __tablename__ = "delegacion"
+    id = Column(Integer,primary_key=True,autoincrement=True)
+    nombre = Column(String(250),nullable=False)
+
+    def getId(self):
+        return self.id
+    
+    def setId(self,id):
+        self.id = id
+
+    def getNombre(self):
+        return self.nombre
+    
+    def setNombre(self,nombre):
+        self.nombre=nombre
+
+class Colonia(Base):
+    __tablename__ = "colonias"
+    id = Column(Integer,primary_key=True,autoincrement=True)
+    nombre = Column(String(250),nullable=False)
+    delegacion_id=Column(Integer,ForeignKey('delegacion.id'),nullable=False)
+    zipcode = Column(Integer,nullable=False)
+
+    def getId(self):
+        return self.id
+    
+    def setId(self,id):
+        self.id = id
+
+    def getNombre(self):
+        return self.nombre
+    
+    def setNombre(self,nombre):
+        self.nombre=nombre
+
+    def getZipCode(self):
+        return self.zipcode
+
+

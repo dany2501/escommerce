@@ -14,3 +14,10 @@ class PaymentResource(Resource):
         params = request.get_json()
         payment = params['payment']
         return ResponseFactory.toResponse(PaymentController().registratePaymentMethod(payment,token))
+
+    def delete(self):
+        token = request.headers['token']
+        params = request.get_json()
+        paymentId = params['paymentId']
+
+        return ResponseFactory.toResponse(PaymentController().deletePayment(token,paymentId))

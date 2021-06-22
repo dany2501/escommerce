@@ -45,6 +45,10 @@ class CartModel(AbstractModel):
         else:
             return None
 
+    def getOrders(self,clientId):
+        orders = self.session.query(Cart).filter(Cart.client_id==clientId,Cart.status_id==2).all()
+        return orders
+
     def deleteProducts(self,cartId):
         cart = self.session.query(CartProduct).filter(CartProduct.cart_id==cartId).all()
         if cart is not None:

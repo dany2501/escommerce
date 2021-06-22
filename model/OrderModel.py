@@ -18,3 +18,8 @@ class OrderModel(AbstractModel):
         order.setOrderedAt(datetime.now())
         self.insert(order)
         return order
+
+    def getOrder(self,cartId):
+        order = self.session.query(Order).filter(Order.cart_id==cartId).first()
+        print(order)
+        return order

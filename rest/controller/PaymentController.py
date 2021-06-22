@@ -51,10 +51,13 @@ class PaymentController(Controller):
         url = self.getUrl()
         client = ClientModel(url).getDataClient(token)
         if client is not None:
-            payment = PaymentModel(url).getLastPayment(client[0].getId())
+            payment = PaymentModel(url).getPayments(client[0].getId())
             if payment is not None:
-                card = Cifrado(self.getSecret()).decrypt(payment.getToken())
-                bodyRS.setPayment(Mapper().mapToPayment(payment,card,card[-4:]))
+                payments = []
+                for p in payment:
+                    card = Cifrado(self.getSecret()).decrypt(p.getToken())
+                    payments.append(Mapper().mapToPayment(p,card,card[-4:]));
+                bodyRS.setPayment(payments)
                 return Response(headerRS, bodyRS)
             else:
                 bodyRS = PaymentRS(False, Error(8002, "No hay métodos de pago"))
@@ -62,3 +65,24 @@ class PaymentController(Controller):
         else:
             bodyRS = PaymentRS(False, Error(8001, "No se encontró al usuario"))
             return Response(headerRS, bodyRS)
+
+    def deletePayment(self,token,paymentId):
+        bodyRS = PaymentRS(True)
+        url = self.getUrl()
+
+        client = ClientModel(url).getDataClient(token)
+        
+        if client is None:
+            bodyRS = PaymentRS(False,Error(1000, "No se encontró al usuario"))
+            return Response(HeaderRS(),bodyRS)
+        
+        payment = PaymentModel(url).getPaymentById(paymentId)
+
+        if payment is None:
+            bodyRS = PaymentRS(False,Error(1000, "No se encontró el método de pago"))
+            return Response(HeaderRS(),bodyRS)
+
+        PaymentModel(url).deletePayment(paymentId)
+
+        return Response(HeaderRS(),bodyRS)
+        

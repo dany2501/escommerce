@@ -19,7 +19,7 @@ class AddressModel(AbstractModel):
         self.insert(address)
 
     def getAddressByClientId(self,clientId):
-        address = self.session.query(Address).filter(Address.client_id==clientId).order_by(Address.id.desc()).first()
+        address = self.session.query(Address).filter(Address.client_id==clientId).all()
         if address is not None:
             return address
         else:

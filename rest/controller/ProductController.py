@@ -79,7 +79,8 @@ class ProductController(Controller):
                 productList = []
                 for product in products:
                     image = ProductModel(url).getImageByProductId(product.getId())
-                    productList.append(Mapper().mapToProduct(product, image.getUrl()))
+                    if image is not None:
+                        productList.append(Mapper().mapToProduct(product, image.getUrl()))
                 bodyRS.setProducts(productList)
                 return Response(headerRS, bodyRS)
             else:

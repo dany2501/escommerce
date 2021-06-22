@@ -31,9 +31,9 @@ class SignUpController(Controller):
                         person = PersonModel(url).createPerson(name,app,apm)
                         code = self.generateRandomCode(6)
                         if code is not None:
-                            user = UserModel(url).createUser(email,password,person.id,code)
+                            user = UserModel(url).createUser(email,password,person.getId(),code)
                             rand_token = str(uuid4())
-                            client = ClientModel(url).createClient(datetime.now(),rand_token,datetime.now(),user.id)
+                            client = ClientModel(url).createClient(datetime.now(),rand_token,datetime.now(),user.getId())
                             if client is not None:
                                 EmailService().sendEmailClient(user.getEmail(),code,name)
                                 bodyRS.setToken(rand_token)

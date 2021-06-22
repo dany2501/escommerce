@@ -1,3 +1,4 @@
+from model.ZipCodeModel import ZipCodeModel
 from rest.controller.Controller import Controller
 from model.ClientModel import ClientModel
 from model.AddressModel import AddressModel
@@ -21,19 +22,25 @@ class AddressController(Controller):
             if token is not None:
                 client = ClientModel(url).getDataClient(token)
                 if client is not None:
-                    AddressModel(url).createAddress(
-                        address["name"],
-                        address["street"],
-                        address["extNum"],
-                        address["zipCode"],
-                        address["suburb"],
-                        address["city"],
-                        address["phone"],
-                        client[0].getId(),
-                    )
-                    address = AddressModel(url).getAddressByClientId(client[0].getId())
-                    if address is not None:
+                    zip = ZipCodeModel(url).findZipCode(int(address["zipCode"]))
+                    if zip is not None:
+                        AddressModel(url).createAddress(
+                            address["name"],
+                            address["street"],
+                            address["extNum"],
+                            address["zipCode"],
+                            address["suburb"],
+                            address["city"],
+                            address["phone"],
+                            client[0].getId(),
+                        )
+                        address = AddressModel(url).getAddressByClientId(client[0].getId())
+                        if address is not None:
+                            return Response(headerRS, bodyRS)
+                    else:
+                        bodyRS = AddressRS(False, Error(1002, "Código postal inválido"))
                         return Response(headerRS, bodyRS)
+
                 else:
                     bodyRS = AddressRS(False, Error(1001, "No se encontró al usuario"))
                     return Response(headerRS, bodyRS)
@@ -54,7 +61,10 @@ class AddressController(Controller):
         if client is not None:
             address = AddressModel(url).getAddressByClientId(client[0].getId())
             if address is not None:
-                bodyRS.setAddress(Mapper().mapToAddress(address))
+                listAddress =[]
+                for a in address:
+                    listAddress.append(Mapper().mapToAddress(a))
+                bodyRS.setAddress(listAddress)
                 return Response(headerRS, bodyRS)
             else:
                 bodyRS = AddressRS(False, Error(1001, "No se la dirección de envío"))

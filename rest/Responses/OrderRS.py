@@ -4,6 +4,7 @@ class OrderRS(BodyRS):
     
     __orderId = None
     __arrivalDate = None
+    __orders = None
 
 
     def __init__(self,success,error=None):
@@ -16,3 +17,7 @@ class OrderRS(BodyRS):
     def setArrivalDate(self,arrivalDate):
         self.__arrivalDate=arrivalDate
         self.update(arrivalDate=arrivalDate)
+    
+    def setOrders(self,orders):
+        self.__orders=orders
+        self.update(orders=orders)

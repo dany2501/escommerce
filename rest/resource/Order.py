@@ -5,11 +5,11 @@ from rest.controller.Response import ResponseFactory
 class OrderResource(Resource):
 
     def get(self):
-        #headers = request.headers['token']
+        headers = request.headers['token']
         #if headers:
         print("")
         #categoryId = request.headers['categoryId']
-        #return ResponseFactory.toResponse(ProductController().getProducts(categoryId=categoryId))
+        return ResponseFactory.toResponse(OrderController().getOrders(headers))
         #else:
            # print("Token not provided")
         #print(params)"

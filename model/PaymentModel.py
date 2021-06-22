@@ -20,8 +20,8 @@ class PaymentModel(AbstractModel):
         self.insert(payment)
         return payment
 
-    def getLastPayment(self,clientId):
-        payment = self.session.query(PaymentMethod).filter(PaymentMethod.client_id==clientId).order_by(PaymentMethod.id.desc()).first()
+    def getPayments(self,clientId):
+        payment = self.session.query(PaymentMethod).filter(PaymentMethod.client_id==clientId).all()
         if payment is not None:
             return payment
         else:
@@ -33,3 +33,9 @@ class PaymentModel(AbstractModel):
             return payment
         else:
             return None
+
+    def deletePayment(self,paymentId):
+        payment = self.session.query(PaymentMethod).filter(PaymentMethod.id==paymentId).first()
+        if payment is not None:
+            self.delete(payment)
+        

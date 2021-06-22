@@ -25,11 +25,13 @@ class ProductModel(AbstractModel):
             print("Throw Exception")
 
     def getProductById(self,productId):
+        print(productId)
         product = self.session.query(Product).filter(Product.id==productId).first()
         self.session.close()
         if product is not None:
             return product
         else:
+            return None
             print("Throw Exception")
 
     def getImageByProductId(self,productId):
@@ -47,3 +49,9 @@ class ProductModel(AbstractModel):
             return products
         else:
             return None
+
+    def updateStock(self,sell,productId):
+        product = self.session.query(Product).filter(Product.id == productId).first()
+        if product is not None:
+            stock = product.getStock()-int(sell)
+            self.session.query(Product).filter(Product.id==productId).update({"stock":stock})

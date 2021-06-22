@@ -3,6 +3,7 @@ from dto.Product import Product
 from dto.Cart import Cart
 from dto.Address import Address
 from dto.Payment import Payment
+from dto.Order import Order
 
 class Mapper():
 
